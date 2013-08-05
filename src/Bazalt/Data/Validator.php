@@ -52,9 +52,9 @@ class Validator implements \ArrayAccess
         foreach ($this->fields as $name => $field) {
             $messages = [];
             $valid &= $field->validate($this[$name], $messages);
-            //if (count($messages) > 0) {
+            if (count($messages) > 0) {
                 $this->errors[$name] = $messages;
-            //}
+            }
         }
         return $valid > 0;
     }

@@ -31,7 +31,9 @@ class ValidationSet
         foreach ($this->validators as $name => $validator) {
             if (!$res = $validator($value)) {
                 $valid = false;
-                $messages[$name] = isset($this->messages[$name]) ? $this->messages[$name] : null;
+                $messages[$name] = isset($this->messages[$name]) ?
+                    (is_callable($this->messages[$name]) ? $this->messages[$name]() : $this->messages[$name]) :
+                    null;
             }
         }
         return $valid;
@@ -112,8 +114,78 @@ class ValidationSet
 
     public function nested(Validator $validator)
     {
-        return $this->validator('nested', function(&$value) use ($validator) {
-            return $validator->data($value)->validate();
-        }, 'Invalid nested validation');
+        $messages = [];
+        return $this->validator('nested', function(&$value) use ($validator, &$messages) {
+            $valid = $validator->data($value)->validate();
+            $messages = $validator->errors();
+            return $valid;
+        }, function() use (&$messages){
+            return $messages;
+        });
+    }
+
+    public function isArray()
+    {
+        return $this->validator('isArray', function($value) {
+            return is_array($value);
+        }, 'Invalid array');
+    }
+
+    /**
+     * @param Validator $validator
+     * @return ValidationSet
+     */
+    public function nestedArray(Validator $validator)
+    {
+        return $this->isArray()->validator('nestedArray', function(&$value) use ($validator) {
+            $valid = true;
+            foreach ($value as $item) {
+                $itemValid = $validator->data($item)->validate();
+                if (!$itemValid) {
+                    $valid = false;
+                }
+            }
+            return $valid;
+        }, 'Invalid nested array validation');
+    }
+
+    /**
+     * @param $keys
+     * @return ValidationSet
+     */
+    public function keys($keys)
+    {
+        $messages = null;
+        return $this->validator('keys', function(&$value) use ($keys, &$messages) {
+            if (!is_array($value)) {
+                $value = (array)$value;
+            }
+            $itemKeys = array_keys($value);
+            $diff = array_diff($itemKeys, $keys);
+            if (count($diff) > 0) {
+                $messages = 'Invalid keys "' . implode(",", $diff) . '"';
+                return false;
+            }
+            return true;
+        }, function() use (&$messages) {
+            return $messages;
+        });
+    }
+
+    public function length($min = null, $max = null)
+    {
+        $messages = [];
+        return $this->validator('length', function(&$value) use ($min, $max, &$messages) {
+            $len = strLen($value);
+            if ($min !== null && $len < $min) {
+                $messages['minlength'] = 'String must be more then ' . $min . ' symbols';
+            }
+            if ($max !== null && $len > $max) {
+                $messages['maxlength'] = 'String must be less then ' . $max . ' symbols';
+            }
+            return count($messages) == 0;
+        }, function() use (&$messages) {
+            return $messages;
+        });
     }
 }

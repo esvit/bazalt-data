@@ -207,4 +207,79 @@ class ValidatorTest extends \tests\BaseCase
             ->validate()
         );
     }
+
+    public function testNestedArray()
+    {
+        $obj = new \stdClass();
+
+        $nested = new \stdClass();
+        $nested->title = '123';
+
+        $obj->data = [
+            $nested
+        ];
+
+        $this->assertTrue(
+            Validator::create($obj)
+                ->field('data')->nestedArray(
+                    Validator::create()
+                             ->field('title')
+                             ->required()
+                             ->equal('123')
+                             ->end()
+                )
+            ->end()
+            ->validate()
+        );
+    }
+
+    public function testArrayKeys()
+    {
+        $obj = new \stdClass();
+
+        $nested = new \stdClass();
+        $nested->title = '123';
+
+        $nested2 = new \stdClass();
+        $nested2->title = 'qwe';
+
+        $obj->data = [
+            'uk' => $nested,
+            'ru' => $nested2
+        ];
+
+        $data = Validator::create($obj)
+            ->field('data')->nestedArray(
+                Validator::create()
+                    ->field('title')
+                    ->required()
+                    ->end()
+            )->keys(['ru', 'uk'])
+            ->end();
+        $valid = $data->validate();
+        $this->assertEquals(
+            [],
+            $data->errors()
+        );
+        $this->assertTrue($valid);
+
+        //invalid
+
+        $data = Validator::create($obj)
+            ->field('data')->nestedArray(
+                Validator::create()
+                    ->field('title')
+                    ->required()
+                    ->end()
+            )->keys(['ru', 'en'])
+            ->end();
+        $valid = $data->validate();
+        $this->assertEquals(
+            ['data' => [
+                'keys' => 'Invalid keys "uk"'
+            ]],
+            $data->errors()
+        );
+        $this->assertFalse($valid);
+    }
 }
