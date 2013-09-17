@@ -14,6 +14,17 @@ class ValidatorTest extends \tests\BaseCase
     {
     }
 
+    public function testArrayAccess()
+    {
+        $data = Validator::create([
+            'test' => 'test'
+        ]);
+        $this->assertEquals('test', $data['test']);
+
+        $data['test'] = 'test2';
+        $this->assertEquals('test2', $data['test']);
+    }
+
     public function testRequired()
     {
         $data = Validator::create([
