@@ -4,11 +4,11 @@ namespace Bazalt\Data;
 
 class ValidationSet
 {
-    protected $messages = [];
+    protected $messages = array();
 
-    protected $validators = [];
+    protected $validators = array();
 
-    protected $depends = [];
+    protected $depends = array();
 
     /**
      * @var Validator
@@ -25,7 +25,7 @@ class ValidationSet
         return $this->validator;
     }
     
-    public function validate($value, &$messages = [])
+    public function validate($value, &$messages = array())
     {
         $valid = true;
         foreach ($this->validators as $name => $validator) {
@@ -39,7 +39,7 @@ class ValidationSet
         return $valid;
     }
 
-    public function validator($name, $function, $message = null, $depends = [])
+    public function validator($name, $function, $message = null, $depends = array())
     {
         $this->validators[$name] = $function;
         $this->messages[$name] = $message;
@@ -96,7 +96,7 @@ class ValidationSet
     public function int($min = null, $max = null)
     {
         return $this->validator('float', function(&$value) use ($min, $max) {
-            $options = [];
+            $options = array();
             if ($min !== null) {
                 $options['min_range'] = $min;
             }
@@ -114,7 +114,7 @@ class ValidationSet
 
     public function nested(Validator $validator)
     {
-        $messages = [];
+        $messages = array();
         return $this->validator('nested', function(&$value) use ($validator, &$messages) {
             $valid = $validator->data($value)->validate();
             $messages = $validator->errors();
@@ -174,7 +174,7 @@ class ValidationSet
 
     public function length($min = null, $max = null)
     {
-        $messages = [];
+        $messages = array();
         return $this->validator('length', function(&$value) use ($min, $max, &$messages) {
             $len = strLen($value);
             if ($min !== null && $len < $min) {

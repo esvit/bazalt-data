@@ -7,7 +7,7 @@ use Bazalt\Data\Validator;
 class EmailValidatorTest extends \tests\BaseCase
 {
     //http://svn.apache.org/viewvc/commons/proper/validator/trunk/src/test/java/org/apache/commons/validator/routines/EmailValidatorTest.java?view=markup
-    protected $validEmails = [
+    protected $validEmails = array(
         "jsmith@apache.org",
         "someone@[216.109.118.76]",
         "someone@yahoo.com",
@@ -69,9 +69,9 @@ class EmailValidatorTest extends \tests\BaseCase
         "abc_@abc.com",
         "abc-def@abc.com",
         "abc_def@abc.com"
-    ];
+    );
 
-    protected $invalidEmails = [
+    protected $invalidEmails = array(
         "jsmith@apache.",
         //"jsmith@apache.c",
         //"someone@yahoo.mu-seum",
@@ -103,7 +103,7 @@ class EmailValidatorTest extends \tests\BaseCase
         "joe,@apache.org",
         "joe;@apache.org",
         "abc@abc_def.com"
-    ];
+    );
 
 
     protected function setUp()
@@ -117,18 +117,18 @@ class EmailValidatorTest extends \tests\BaseCase
     public function testEmail()
     {
         foreach ($this->validEmails as $email){
-            $data = Validator::create([
+            $data = Validator::create(array(
                 'email' => $email
-            ]);
+            ));
 
             $data->field('email')->required()->email();
 
             $this->assertTrue($data->validate(), 'E-mail "' . $email . '" is invalid');
         }
         foreach ($this->invalidEmails as $email){
-            $data = Validator::create([
+            $data = Validator::create(array(
                 'email' => $email
-            ]);
+            ));
 
             $data->field('email')->required()->email();
 
