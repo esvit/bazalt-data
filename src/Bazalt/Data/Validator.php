@@ -22,11 +22,11 @@ class Validator implements \ArrayAccess
         return new Validator($data);
     }
 
-    protected  function __construct($data = array())
+    protected function __construct($data = array())
     {
         $this->data = $data;
     }
-    
+
     public function errors()
     {
         return $this->errors;
