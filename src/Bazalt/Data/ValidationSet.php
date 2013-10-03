@@ -2,6 +2,8 @@
 
 namespace Bazalt\Data;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 class ValidationSet
 {
     protected $messages = array();
@@ -67,6 +69,10 @@ class ValidationSet
     public function bool()
     {
         return $this->validator('bool', function(&$value) {
+            if ($value === '') {
+                $value = false;
+                return true;
+            }
             $valid = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
             if ($valid !== null) {
                 $value = $valid;
