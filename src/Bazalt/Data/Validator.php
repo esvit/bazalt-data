@@ -4,25 +4,25 @@ namespace Bazalt\Data;
 
 class Validator implements \ArrayAccess
 {
-    protected $data = [];
+    protected $data = array();
 
     /**
-     * @var ValidationSet[]
+     * @var ValidationSetarray()
      */
-    protected $fields = [];
+    protected $fields = array();
 
-    protected $errors = [];
+    protected $errors = array();
 
     /**
      * @param array $data
      * @return Validator
      */
-    public static function create($data = [])
+    public static function create($data = array())
     {
         return new Validator($data);
     }
 
-    protected  function __construct($data = [])
+    protected  function __construct($data = array())
     {
         $this->data = $data;
     }
@@ -50,7 +50,7 @@ class Validator implements \ArrayAccess
     {
         $valid = true;
         foreach ($this->fields as $name => $field) {
-            $messages = [];
+            $messages = array();
             $valid &= $field->validate($this[$name], $messages);
             if (count($messages) > 0) {
                 $this->errors[$name] = $messages;
