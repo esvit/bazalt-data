@@ -103,7 +103,7 @@ class ValidationSet
             if ($max !== null) {
                 $options['max_range'] = $max;
             }
-            $valid = filter_var($value, FILTER_VALIDATE_INT, ['options' => $options]);
+            $valid = filter_var($value, FILTER_VALIDATE_INT, array('options' => $options));
             if ($valid !== false) {
                 $value = $valid;
                 return true;
