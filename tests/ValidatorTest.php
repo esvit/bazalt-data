@@ -83,16 +83,24 @@ class ValidatorTest extends \tests\BaseCase
         ));
 
         $data->field('test')->bool()->equal(true);
-        $data->field('test2')->bool()->equal(true);
-        $data->field('test3')->bool()->equal(true);
-        $data->field('test4')->bool()->equal(true);
-        $data->field('test5')->bool()->equal(false);
-        $data->field('test6')->bool()->equal(false);
-        $data->field('test7')->bool()->equal(false);
-        $data->field('test8')->bool()->equal(false);
-        $data->field('test9')->bool()->equal(false);
-
         $this->assertTrue($data->validate());
+        $data->field('test2')->bool()->equal(true);
+        $this->assertTrue($data->validate());
+        $data->field('test3')->bool()->equal(true);
+        $this->assertTrue($data->validate());
+        $data->field('test4')->bool()->equal(true);
+        $this->assertTrue($data->validate());
+        $data->field('test5')->bool()->equal(false);
+        $this->assertTrue($data->validate());
+        $data->field('test6')->bool()->equal(false);
+        $this->assertTrue($data->validate());
+        $data->field('test7')->bool()->equal(false);
+        $this->assertTrue($data->validate());
+        $data->field('test8')->bool()->equal(false);
+        $this->assertTrue($data->validate());
+        $data->field('test9')->bool()->equal(false);
+        $this->assertTrue($data->validate());
+
 
         $data = Validator::create(array(
             'test' => 'test'
