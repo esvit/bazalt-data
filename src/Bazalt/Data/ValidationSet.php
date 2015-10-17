@@ -57,6 +57,13 @@ class ValidationSet
             return !empty($value);
         }, 'Field cannot be empty');
     }
+    
+    public function requiredArray()
+    {
+        return $this->validator('requiredArray', function($value) {
+            return is_array($value) && count($value) > 0;
+        }, 'Field must be a not empty array');
+    }
 
     public function email()
     {
