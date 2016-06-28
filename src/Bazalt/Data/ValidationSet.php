@@ -192,9 +192,11 @@ class ValidationSet
             $len = strLen($value);
             if ($min !== null && $len < $min) {
                 $messages['minlength'] = 'String must be more then ' . $min . ' symbols';
+                $messages['minlength_value'] = $min;
             }
             if ($max !== null && $len > $max) {
                 $messages['maxlength'] = 'String must be less then ' . $max . ' symbols';
+                $messages['maxlength_value'] = $max;
             }
             return count($messages) == 0;
         }, function() use (&$messages) {
